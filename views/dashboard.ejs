@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Teacher Dashboard</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Teacher Dashboard</h1>
+
+    <table>
+      <tr>
+        <th>Name</th>
+        <th>Status</th>
+        <th>Date</th>
+      </tr>
+      <% students.forEach(student => { %>
+        <tr>
+          <td><%= student.name %></td>
+          <td><%= student.status %></td>
+          <td><%= student.date.toDateString() %></td>
+        </tr>
+      <% }) %>
+    </table>
+  </div>
+</body>
+</html>

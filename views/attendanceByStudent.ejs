@@ -1,0 +1,12 @@
+<h2>Attendance for <%= student.name %> (Roll: <%= student.rollNo %>)</h2>
+<table border="1">
+  <tr>
+    <th>Date</th>
+  </tr>
+  <% attendance.forEach(record => { %>
+    <tr>
+      <td><%= record.date.toDateString() %></td>
+    </tr>
+  <% }) %>
+</table>
+<a href="/teacher/students">Back</a>

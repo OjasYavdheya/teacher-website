@@ -1,8 +1,8 @@
 const express = require("express");
-const mongoose = require("mongoose");
+
 const path = require("path");
 const Student = require("./models/Student");
-const bodyParser = require("body-parser");
+
 const teacherRoutes = require("./routes/teacherRoutes");
 const connectDB = require("./config/db");
 
@@ -10,23 +10,25 @@ const app = express();
 connectDB(); // connect MongoDB
 
 
-app.use(bodyParser.json());
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 
 // EJS + Static files
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, "public")));
 
-// Teacher dashboard
-app.get("/", async (req, res) => {
-  try {
-    const students = await Student.find().sort({ date: -1 });
-    res.render("dashboard", { students });
-  } catch (err) {
-    res.status(500).send("Error fetching students");
-  }
-});
+// // Teacher dashboard
+// app.get("/", async (req, res) => {
+//   try {
+//     const students = await Student.find().sort({ date: -1 });
+//     res.render("dashboard", { students });
+//   } catch (err) {
+//     res.status(500).send("Error fetching students");
+//   }
+// });
 
 // Routes
 app.use("/teacher", teacherRoutes);

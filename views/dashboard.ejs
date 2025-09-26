@@ -8,17 +8,36 @@
   <div class="container">
     <h1>Teacher Dashboard</h1>
 
-    <table>
+    <!-- Quick Navigation -->
+    <nav>
+      <ul>
+        <li><a href="/teacher/students">All Registered Students</a></li>
+        <li>
+          <form action="/teacher/attendance/day" method="get" style="display:inline;">
+            <input type="date" name="date" required>
+            <button type="submit">Check Day-wise Attendance</button>
+          </form>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Summary Table for Today -->
+    <h2>Today's Attendance Summary</h2>
+    <table border="1">
       <tr>
         <th>Name</th>
+        <th>Roll No</th>
         <th>Status</th>
-        <th>Date</th>
+        <th>Details</th>
       </tr>
       <% students.forEach(student => { %>
         <tr>
           <td><%= student.name %></td>
+          <td><%= student.rollNo %></td>
           <td><%= student.status %></td>
-          <td><%= student.date %></td>
+          <td>
+            <a href="/teacher/attendance/student/<%= student._id %>">View History</a>
+          </td>
         </tr>
       <% }) %>
     </table>

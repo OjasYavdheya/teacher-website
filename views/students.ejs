@@ -1,0 +1,23 @@
+<h2>Registered Students</h2>
+<table border="1">
+  <tr>
+    <th>Name</th>
+    <th>Roll No</th>
+    <th>View Attendance</th>
+  </tr>
+  <% students.forEach(student => { %>
+    <tr>
+      <td><%= student.name %></td>
+      <td><%= student.rollNo %></td>
+      <td>
+        <a href="/teacher/attendance/student/<%= student._id %>">View</a>
+      </td>
+    </tr>
+  <% }) %>
+</table>
+
+<h3>Check Day-wise Attendance</h3>
+<form action="/teacher/attendance/day" method="get">
+  <input type="date" name="date" required>
+  <button type="submit">Check</button>
+</form>

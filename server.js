@@ -9,13 +9,6 @@ const connectDB = require("./config/db");
 const app = express();
 connectDB(); // connect MongoDB
 
-// MongoDB Atlas connection
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-.then(() => console.log("✅ Connected to MongoDB Atlas"))
-.catch(err => console.error("❌ Error:", err));
 
 app.use(bodyParser.json());
 

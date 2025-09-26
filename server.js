@@ -2,8 +2,12 @@ const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const Student = require("./models/Student");
+const bodyParser = require("body-parser");
+const teacherRoutes = require("./routes/teacherRoutes");
+const connectDB = require("./config/db");
 
 const app = express();
+connectDB(); // connect MongoDB
 
 // MongoDB Atlas connection
 mongoose.connect(process.env.MONGODB_URI, {
@@ -12,6 +16,9 @@ mongoose.connect(process.env.MONGODB_URI, {
 })
 .then(() => console.log("✅ Connected to MongoDB Atlas"))
 .catch(err => console.error("❌ Error:", err));
+
+app.use(bodyParser.json());
+
 
 // EJS + Static files
 app.set("view engine", "ejs");
@@ -28,6 +35,9 @@ app.get("/", async (req, res) => {
   }
 });
 
+// Routes
+app.use("/teacher", teacherRoutes);
+
 // Start server
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Teacher app running on port ${PORT}`));
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

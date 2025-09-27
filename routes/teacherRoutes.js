@@ -53,10 +53,21 @@ router.get("/attendance/day", async (req, res) => {
 });
 
 // Student-wise attendance
-router.get("/attendance/student/:id", async (req, res) => {
-  const student = await Student.findById(req.params.id);
-  const records = await Attendance.find({ studentId: student._id });
-  res.render("attendanceByStudent", { student, records });
+router.get("/student/:id", async (req, res) => {
+  try {
+    const student = await Student.findById(req.params.id);
+    const records = await Attendance.find({ studentId: req.params.id }).sort({ date: -1 });
+
+    const presentCount = records.filter(r => r.status === "Present").length;
+    const absentCount = records.filter(r => r.status === "Absent").length;
+    const total = presentCount + absentCount;
+    const attendancePercent = total ? ((presentCount / total) * 100).toFixed(1) : 0;
+
+    res.render("attendanceByStudent", { student, records, presentCount, absentCount, attendancePercent });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching student attendance");
+  }
 });
 
 module.exports = router;

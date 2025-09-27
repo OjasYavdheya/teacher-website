@@ -1,12 +1,70 @@
-<h2>Attendance for <%= student.name %> (Roll: <%= student.rollNo %>)</h2>
-<table border="1">
-  <tr>
-    <th>Date</th>
-  </tr>
-  <% records.forEach(record => { %>
-    <tr>
-      <td><%= record.date.toDateString() %></td>
-    </tr>
-  <% }) %>
-</table>
-<a href="/teacher/students">Back</a>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student-wise Attendance</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Student-wise Attendance</h1>
+
+    <!-- Search Student -->
+    <input type="text" class="search-box" placeholder="🔍 Select Student">
+
+    <!-- Student Info Card -->
+    <div class="card">
+      <h2><%= student.name %></h2>
+      <p><strong>Roll No:</strong> <%= student.rollNo %></p>
+      <p><strong>Attendance %:</strong> <%= attendancePercent %>%</p>
+      <div class="stats">
+        <span>Present: <%= presentCount %></span>
+        <span>Absent: <%= absentCount %></span>
+      </div>
+    </div>
+
+    <!-- Attendance Table -->
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% records.forEach(record => { %>
+          <tr>
+            <td><%= record.date.toDateString() %></td>
+            <% if(record.status === "Present"){ %>
+              <td class="present">✔ Present</td>
+            <% } else { %>
+              <td class="absent">✘ Absent</td>
+            <% } %>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+
+    <!-- Actions -->
+    <div class="actions">
+      <select>
+        <option>January</option>
+        <option>February</option>
+        <option>March</option>
+        <option>April</option>
+        <option>May</option>
+        <option>June</option>
+        <option>July</option>
+        <option>August</option>
+        <option>September</option>
+        <option>October</option>
+        <option>November</option>
+        <option>December</option>        
+      </select>
+      <button>Download Report</button>
+    </div>
+  </div>
+</body>
+</html>
+

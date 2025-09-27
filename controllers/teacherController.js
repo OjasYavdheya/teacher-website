@@ -14,7 +14,7 @@ exports.dashboard = async (req, res) => {
       const isPresent = attendance.some(a => a.studentId.toString() === student._id.toString());
       return {
         name: student.name,
-        rollNo: student.rollNo,
+        rollNo: student.roll_no,
         status: isPresent ? "Present" : "Absent",
         date: today
       };
@@ -41,7 +41,7 @@ exports.getAllStudents = async (req, res) => {
 exports.getAttendanceByDay = async (req, res) => {
   try {
     const { date } = req.params; // e.g. 2025-09-26
-    const attendance = await Attendance.find({ date }).populate("studentId", "name rollNo");
+    const attendance = await Attendance.find({ date }).populate("studentId", "name roll_no");
     res.render("attendanceByDay", { date, attendance });  // render attendanceByDay.ejs
   } catch (err) {
     res.status(500).send("Error: " + err.message);

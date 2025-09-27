@@ -54,9 +54,10 @@ router.get("/student/:id", async (req, res) => {
 //   res.render("attendanceByStudent", { student, records });
 // });
 
-// search Box
-router.get("/student-attendance", (req, res) => {
-  res.render("attendanceByStudent");
-});
+// // search Box
+// router.get("/student-attendance", async (req, res) => {
+//   const students = await Student.find().sort({ name: 1 });
+//   res.render("attendanceByStudent");
+// });
 
 module.exports = router;

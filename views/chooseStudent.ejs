@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Student</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <style>
+    body { font-family: Arial, sans-serif; background:#f9fafb; margin:0; padding:20px; display:flex; justify-content:center; align-items:center; height:100vh; }
+    .container { max-width:400px; width:100%; background:#fff; padding:25px; border-radius:12px; box-shadow:0 4px 10px rgba(0,0,0,0.08); text-align:center; }
+    h1 { font-size:22px; margin-bottom:20px; color:#111827; }
+    select, button { width:100%; padding:12px; margin:8px 0; font-size:14px; border:1px solid #d1d5db; border-radius:8px; }
+    button { background:#2563eb; color:white; font-weight:bold; border:none; cursor:pointer; }
+    button:hover { background:#1d4ed8; }
+    .back { display:block; margin-top:15px; color:#2563eb; text-decoration:none; font-size:14px; }
+    .back:hover { text-decoration:underline; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Choose a Student</h1>
+    <form action="/teacher/student" method="GET">
+      <select name="id" required>
+        <% students.forEach(student => { %>
+          <option value="<%= student._id %>"><%= student.name %> (Roll: <%= student.rollNo %>)</option>
+        <% }) %>
+      </select>
+      <button type="submit">View Attendance</button>
+    </form>
+    <a href="/" class="back">⬅ Back</a>
+  </div>
+</body>
+</html>

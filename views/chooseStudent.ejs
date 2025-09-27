@@ -22,7 +22,7 @@
     <form action="/teacher/student" method="GET">
       <select name="id" required>
         <% students.forEach(student => { %>
-          <option value="<%= student._id %>"><%= student.name %> (Roll: <%= student.rollNo %>)</option>
+          <option value="<%= student._id %>"><%= student.name %> (Roll: <%= student.roll_no %>)</option>
         <% }) %>
       </select>
       <button type="submit">View Attendance</button>

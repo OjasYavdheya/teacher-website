@@ -10,11 +10,11 @@ router.get("/students", async (req, res) => {
   res.render("students", { students });
 });
 
-// Show student selection page before attendance
-router.get("/student/choose", async (req, res) => {
-  const students = await Student.find().sort({ name: 1 });
-  res.render("chooseStudent", { students });
-});
+// // Show student selection page before attendance
+// router.get("/student/choose", async (req, res) => {
+//   const students = await Student.find().sort({ name: 1 });
+//   res.render("chooseStudent", { students });
+// });
 
 // Day-wise attendance
 router.get("/attendance/day", async (req, res) => {

@@ -10,8 +10,16 @@
   <div class="container">
     <h1>Student-wise Attendance</h1>
 
-    <!-- Search Student -->
-    <input type="text" class="search-box" placeholder="🔍 Select Student">
+    <!-- Search Box -->
+    <form action="/teacher/student-attendance" method="GET">
+      <input 
+        type="text" 
+        name="rollNo" 
+        placeholder="🔍 Select Student"
+        required
+      >
+      <button type="submit">Search</button>
+    </form>
 
     <!-- Student Info Card -->
     <div class="card">

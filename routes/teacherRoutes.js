@@ -54,4 +54,9 @@ router.get("/student", async (req, res) => {
   res.render("attendanceByStudent", { student, records });
 });
 
+// search Box
+router.get("/student-attendance", (req, res) => {
+  res.render("attendanceByStudent");
+});
+
 module.exports = router;

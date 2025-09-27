@@ -46,13 +46,13 @@ router.get("/student/:id", async (req, res) => {
   }
 });
 
-// Choose Student 
-router.get("/student", async (req, res) => {
-  const studentId = req.query.id;
-  const student = await Student.findById(studentId);
-  const records = await Attendance.find({ studentId }).sort({ date: -1 });
-  res.render("attendanceByStudent", { student, records });
-});
+// // Choose Student 
+// router.get("/student", async (req, res) => {
+//   const studentId = req.query.id;
+//   const student = await Student.findById(studentId);
+//   const records = await Attendance.find({ studentId }).sort({ date: -1 });
+//   res.render("attendanceByStudent", { student, records });
+// });
 
 // search Box
 router.get("/student-attendance", (req, res) => {

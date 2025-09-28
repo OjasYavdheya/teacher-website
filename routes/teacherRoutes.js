@@ -10,12 +10,6 @@ router.get("/students", async (req, res) => {
   res.render("students", { students });
 });
 
-// // Show student selection page before attendance
-// router.get("/student/choose", async (req, res) => {
-//   const students = await Student.find().sort({ name: 1 });
-//   res.render("chooseStudent", { students });
-// });
-
 // Day-wise attendance
 router.get("/attendance/day", async (req, res) => {
   const dateParam = req.query.date;
@@ -31,11 +25,11 @@ router.get("/attendance/day", async (req, res) => {
 // Student-wise attendance
 router.get("/student-attendance", async (req, res) => {
   try {
-    const { rollNo, name } = req.query;
+    const { roll_no, name } = req.query;
 
     let student;
-    if (rollNo) {
-      student = await Student.findOne({ rollNo: rollNo });
+    if (roll_no) {
+      student = await Student.findOne({ roll_no: roll_no });
     } else if (name) {
       student = await Student.findOne({ name: name });
     }
@@ -51,18 +45,5 @@ router.get("/student-attendance", async (req, res) => {
   }
 });
 
-// // Choose Student 
-// router.get("/student", async (req, res) => {
-//   const studentId = req.query.id;
-//   const student = await Student.findById(studentId);
-//   const records = await Attendance.find({ studentId }).sort({ date: -1 });
-//   res.render("attendanceByStudent", { student, records });
-// });
-
-// // search Box
-// router.get("/student-attendance", async (req, res) => {
-//   const students = await Student.find().sort({ name: 1 });
-//   res.render("attendanceByStudent");
-// });
 
 module.exports = router;

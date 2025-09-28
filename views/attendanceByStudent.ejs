@@ -31,7 +31,6 @@
       <div class="card">
         <h2><%= student.name %></h2>
         <p><strong>Roll No:</strong> <%= student.roll_no %></p>
-        <p><strong>Class:</strong> <%= student.className %></p>
       </div>
 
       <!-- Attendance Table -->
@@ -43,7 +42,7 @@
           </tr>
         </thead>
         <tbody>
-          <% attendance.forEach(record => { %>
+          <% records.forEach(record => { %>
             <tr>
               <td><%= record.date.toDateString() %></td>
               <td class="<%= record.status === 'Present' ? 'present' : 'absent' %>">

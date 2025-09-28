@@ -8,12 +8,13 @@
 </head>
 <body>
   <div class="container">
-    <h1>Student-wise Attendance</h1>
+    <h1>Search Student Attendance</h1>
 
     <!-- Search Box -->
     <form action="/teacher/student-attendance" method="GET">
       <input 
         type="text" 
+        class="search-box" 
         name="rollNo" 
         placeholder="🔍 Select Student"
         required
@@ -21,6 +22,39 @@
       <button type="submit">Search</button>
     </form>
 
+    <% if (error) { %>
+      <p style="color:red;"><%= error %></p>
+    <% } %>
+
+    <% if (student) { %>
+      <!-- Student Info Card -->
+      <div class="card">
+        <h2><%= student.name %></h2>
+        <p><strong>Roll No:</strong> <%= student.rollNo %></p>
+        <p><strong>Class:</strong> <%= student.className %></p>
+      </div>
+
+      <!-- Attendance Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% attendance.forEach(record => { %>
+            <tr>
+              <td><%= record.date.toDateString() %></td>
+              <td class="<%= record.status === 'Present' ? 'present' : 'absent' %>">
+                <%= record.status %>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    <% } %>
+  </div>
 </body>
 </html>
 

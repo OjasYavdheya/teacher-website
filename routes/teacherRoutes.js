@@ -22,23 +22,27 @@ router.get("/attendance/day", async (req, res) => {
   res.render("attendanceByDay", { date: dateParam, records });
 });
 
-// Student-wise attendance
+// Student-wise attendance (search by Roll No.)
 router.get("/student-attendance", async (req, res) => {
   try {
-    const { roll_no, name } = req.query;
+    const { roll_no } = req.query;
 
-    let student;
-    if (roll_no) {
-      student = await Student.findOne({ roll_no: roll_no });
-    } else if (name) {
-      student = await Student.findOne({ name: name });
+    // If no roll_no provided, just show the search box
+    if (!roll_no) {
+      return res.render("attendanceByStudent", { student: null, attendance: [], error: null });
     }
+
+    // Find student by Roll No.
+    const student = await Student.findOne({ roll_no: roll_no });
 
     if (!student) {
-      return res.render("attendanceByStudent", { student: null, error: "Student not found" });
+      return res.render("attendanceByStudent", { student: null, attendance: [], error: "No student found with this Roll No." });
     }
 
-    res.render("attendanceByStudent", { student, error: null });
+    // Find this student's attendance records
+    const attendance = await Attendance.find({ student: student._id }).sort({ date: 1 });
+
+    res.render("attendanceByStudent", { student, attendance, error: null });
   } catch (err) {
     console.error(err);
     res.status(500).send("Server error");

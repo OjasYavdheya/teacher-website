@@ -12,31 +12,26 @@
     <h1>Search Student Attendance</h1>
 
     <!-- Search Box with Suggestions -->
-    <form action="/teacher/student-attendance" method="GET" id="searchForm">
-      <div class="search-container">
-        <input 
-          type="text" 
-          class="search-box" 
-          name="roll_no" 
-          id="searchInput"
-          placeholder="🔍 Search by Name or Roll No."
-          autocomplete="off"
-          required
-        >
-        <div class="suggestions-box" id="suggestionsBox"></div>
-      </div>
-      <button type="submit">Search</button>
-    </form>
+    <div class="search-container">
+      <input 
+        type="text" 
+        class="search-box" 
+        id="searchInput"
+        placeholder="🔍 Search by Name or Roll No."
+        autocomplete="off"
+      >
+      <div class="suggestions-box" id="suggestionsBox"></div>
+    </div>
 
     <% if (student) { %>
       <!-- Student Info Card -->
-      <div class="card">
+      <div class="card" id="studentCard">
         <h2><%= student.name %></h2>
         <p><strong>Roll No:</strong> <%= student.roll_no %></p>
       </div>
 
       <!-- Attendance Table -->
-      <table>
+      <table id="attendanceTable">
         <thead>
           <tr>
             <th>Date</th>
@@ -54,11 +49,18 @@
           <% }) %>
         </tbody>
       </table>
+    <% } else { %>
+      <!-- Placeholder for dynamic content -->
+      <div id="studentCard"></div>
+      <div id="attendanceTable"></div>
     <% } %>
   </div>
+
   <script>
     const searchInput = document.getElementById('searchInput');
     const suggestionsBox = document.getElementById('suggestionsBox');
+    const studentCard = document.getElementById('studentCard');
+    const attendanceTable = document.getElementById('attendanceTable');
     let students = [];
 
     // Fetch all students on page load
@@ -68,6 +70,62 @@
         students = await response.json();
       } catch (error) {
         console.error('Error fetching students:', error);
+      }
+    }
+
+    // Fetch and display student attendance
+    async function loadStudentAttendance(rollNo) {
+      try {
+        const response = await fetch(`/teacher/student-attendance-data?roll_no=${rollNo}`);
+        const data = await response.json();
+
+        if (!data.student) {
+          studentCard.innerHTML = '<div class="card"><p>Student not found</p></div>';
+          attendanceTable.innerHTML = '';
+          return;
+        }
+
+        // Display student card
+        studentCard.innerHTML = `
+          <div class="card">
+            <h2>${data.student.name}</h2>
+            <p><strong>Roll No:</strong> ${data.student.roll_no}</p>
+          </div>
+        `;
+
+        // Display attendance table
+        if (data.records.length === 0) {
+          attendanceTable.innerHTML = '<p style="text-align: center; color: #6b7280; margin-top: 20px;">No attendance records found</p>';
+        } else {
+          const rows = data.records.map(record => {
+            const date = new Date(record.date).toDateString();
+            const statusClass = record.status === 'Present' ? 'present' : 'absent';
+            return `
+              <tr>
+                <td>${date}</td>
+                <td class="${statusClass}">${record.status}</td>
+              </tr>
+            `;
+          }).join('');
+
+          attendanceTable.innerHTML = `
+            <table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+          `;
+        }
+      } catch (error) {
+        console.error('Error loading student attendance:', error);
+        studentCard.innerHTML = '<div class="card"><p>Error loading student data</p></div>';
+        attendanceTable.innerHTML = '';
       }
     }
 
@@ -103,8 +161,12 @@
       document.querySelectorAll('.suggestion-item').forEach(item => {
         item.addEventListener('click', function() {
           const rollNo = this.getAttribute('data-rollno');
-          searchInput.value = rollNo;
+          const text = this.textContent.trim();
+          searchInput.value = text;
           suggestionsBox.classList.remove('active');
+          
+          // Load student attendance immediately
+          loadStudentAttendance(rollNo);
         });
       });
     }

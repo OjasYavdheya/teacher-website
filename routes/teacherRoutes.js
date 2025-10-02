@@ -65,5 +65,31 @@ router.get("/students-data", async (req, res) => {
   }
 });
 
+// API endpoint to fetch student attendance data (for AJAX loading)
+router.get("/student-attendance-data", async (req, res) => {
+  try {
+    const { roll_no } = req.query;
+
+    if (!roll_no) {
+      return res.json({ student: null, records: [] });
+    }
+
+    // Find the student
+    const student = await Student.findOne({ roll_no: roll_no });
+
+    if (!student) {
+      return res.json({ student: null, records: [] });
+    }
+
+    // Find attendance records for that student
+    const records = await Attendance.find({ studentId: student._id }).sort({ date: -1 });
+
+    res.json({ student, records });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error fetching student attendance" });
+  }
+});
+
 
 module.exports = router;

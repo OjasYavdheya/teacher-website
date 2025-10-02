@@ -54,5 +54,16 @@ router.get("/student-attendance", async (req, res) => {
   }
 });
 
+// API endpoint to fetch all students (for search suggestions)
+router.get("/students-data", async (req, res) => {
+  try {
+    const students = await Student.find({}, 'name roll_no').sort({ name: 1 });
+    res.json(students);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error fetching students" });
+  }
+});
+
 
 module.exports = router;

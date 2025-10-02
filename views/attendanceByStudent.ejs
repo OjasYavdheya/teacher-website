@@ -5,20 +5,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student-wise Attendance</title>
   <link rel="stylesheet" href="/css/style.css">
+  <style></style>
 </head>
 <body>
   <div class="container">
     <h1>Search Student Attendance</h1>
 
-    <!-- Search Box -->
-    <form action="/teacher/student-attendance" method="GET">
-      <input 
-        type="text" 
-        class="search-box" 
-        name="roll_no" 
-        placeholder="🔍 Select Student"
-        required
-      >
+    <!-- Search Box with Suggestions -->
+    <form action="/teacher/student-attendance" method="GET" id="searchForm">
+      <div class="search-container">
+        <input 
+          type="text" 
+          class="search-box" 
+          name="roll_no" 
+          id="searchInput"
+          placeholder="🔍 Search by Name or Roll No."
+          autocomplete="off"
+          required
+        >
+        <div class="suggestions-box" id="suggestionsBox"></div>
+      </div>
       <button type="submit">Search</button>
     </form>
 
@@ -50,6 +56,79 @@
       </table>
     <% } %>
   </div>
+  <script>
+    const searchInput = document.getElementById('searchInput');
+    const suggestionsBox = document.getElementById('suggestionsBox');
+    let students = [];
+
+    // Fetch all students on page load
+    async function fetchStudents() {
+      try {
+        const response = await fetch('/teacher/students-data');
+        students = await response.json();
+      } catch (error) {
+        console.error('Error fetching students:', error);
+      }
+    }
+
+    // Filter and display suggestions
+    function showSuggestions(query) {
+      if (!query.trim()) {
+        suggestionsBox.classList.remove('active');
+        return;
+      }
+
+      const filtered = students.filter(student => {
+        const nameMatch = student.name.toLowerCase().includes(query.toLowerCase());
+        const rollMatch = student.roll_no.toLowerCase().includes(query.toLowerCase());
+        return nameMatch || rollMatch;
+      });
+
+      if (filtered.length === 0) {
+        suggestionsBox.innerHTML = '<div class="no-results">No students found</div>';
+        suggestionsBox.classList.add('active');
+        return;
+      }
+
+      const html = filtered.map(student => 
+        `<div class="suggestion-item" data-rollno="${student.roll_no}">
+          ${student.name} : ${student.roll_no}
+        </div>`
+      ).join('');
+
+      suggestionsBox.innerHTML = html;
+      suggestionsBox.classList.add('active');
+
+      // Add click event to each suggestion
+      document.querySelectorAll('.suggestion-item').forEach(item => {
+        item.addEventListener('click', function() {
+          const rollNo = this.getAttribute('data-rollno');
+          searchInput.value = rollNo;
+          suggestionsBox.classList.remove('active');
+        });
+      });
+    }
+
+    // Event listeners
+    searchInput.addEventListener('input', (e) => {
+      showSuggestions(e.target.value);
+    });
+
+    searchInput.addEventListener('focus', (e) => {
+      if (e.target.value.trim()) {
+        showSuggestions(e.target.value);
+      }
+    });
+
+    // Close suggestions when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-container')) {
+        suggestionsBox.classList.remove('active');
+      }
+    });
+
+    // Fetch students when page loads
+    fetchStudents();
+  </script>
 </body>
 </html>
-

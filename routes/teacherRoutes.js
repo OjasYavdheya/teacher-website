@@ -52,16 +52,79 @@ router.post("/delete-student", async (req, res) => {
 });
 
 
-// Day-wise attendance
+// Date-wise attendance - NEW IMPROVED VERSION
+router.get("/attendance-by-date", async (req, res) => {
+  try {
+    const { date } = req.query;
+    let records = [];
+    let selectedDate = null;
+
+    if (date) {
+      selectedDate = date;
+      const start = new Date(date);
+      start.setHours(0, 0, 0, 0);
+      
+      const end = new Date(date);
+      end.setHours(23, 59, 59, 999);
+
+      // Find all attendance records for the selected date
+      records = await Attendance.find({
+        date: { $gte: start, $lte: end }
+      })
+      .populate("studentId", "name roll_no")
+      .sort({ "studentId.roll_no": 1 });
+    }
+
+    res.render("attendanceByDate", { 
+      records, 
+      selectedDate 
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error fetching attendance");
+  }
+});
+
+// Download Report Route
+router.get("/download-report", async (req, res) => {
+  try {
+    const { date } = req.query;
+    
+    if (!date) {
+      return res.status(400).send("Date is required");
+    }
+
+    const start = new Date(date);
+    start.setHours(0, 0, 0, 0);
+    
+    const end = new Date(date);
+    end.setHours(23, 59, 59, 999);
+
+    const records = await Attendance.find({
+      date: { $gte: start, $lte: end }
+    })
+    .populate("studentId", "name roll_no")
+    .sort({ "studentId.roll_no": 1 });
+
+    // Create CSV content
+    let csv = "Roll No,Student Name,Status\n";
+    records.forEach(record => {
+      csv += `${record.studentId.roll_no},${record.studentId.name},${record.status}\n`;
+    });
+
+    // Set headers for file download
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename="attendance_${date}.csv"`);
+    res.send(csv);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error generating report");
+  }
+});
+
+// Old day-wise attendance route (for backward compatibility)
 router.get("/attendance/day", async (req, res) => {
-  const dateParam = req.query.date;
-  if (!dateParam) return res.send("Please select a date");
-
-  const start = new Date(dateParam);
-  const end = new Date(start.getTime() + 24 * 60 * 60 * 1000);
-
-  const records = await Attendance.find({ date: { $gte: start, $lt: end } }).populate("studentId");
-  res.render("attendanceByDay", { date: dateParam, records });
+  res.redirect("/teacher/attendance-by-date");
 });
 
 // Student-wise attendance (search by Roll No.)

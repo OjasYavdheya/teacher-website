@@ -15,6 +15,43 @@ router.get("/students", async (req, res) => {
   }
 });
 
+// Edit Student
+router.post("/edit-student", async (req, res) => {
+  try {
+    const { studentId, name, roll_no, email } = req.body;
+    
+    await Student.findByIdAndUpdate(studentId, {
+      name,
+      roll_no,
+      email
+    });
+    
+    res.redirect("/teacher/students");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error updating student");
+  }
+});
+
+// Delete Student
+router.post("/delete-student", async (req, res) => {
+  try {
+    const { studentId } = req.body;
+    
+    // Delete student
+    await Student.findByIdAndDelete(studentId);
+    
+    // Also delete all attendance records for this student
+    await Attendance.deleteMany({ studentId });
+    
+    res.redirect("/teacher/students");
+  } catch (err) {
+    console.error(err);
+    res.status(500).send("Error deleting student");
+  }
+});
+
+
 // Day-wise attendance
 router.get("/attendance/day", async (req, res) => {
   const dateParam = req.query.date;

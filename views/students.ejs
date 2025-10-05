@@ -8,46 +8,126 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/css/style.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9fafb;
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #f5e6d3 0%, #e8d5c4 100%);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       padding: 20px;
     }
 
     .container {
-      max-width: 900px;
-      margin: 0 auto;
-      background: #fff;
-      padding: 25px;
-      border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+      background: #ffffff;
+      border-radius: 30px;
+      padding: 50px 60px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      max-width: 1000px;
+      width: 100%;
+      border: 3px solid #e0d5c7;
     }
 
     h1 {
-      font-size: 24px;
-      margin-bottom: 15px;
-      color: #111827;
+      font-size: 42px;
+      font-weight: 800;
+      color: #1a1a2e;
       text-align: center;
+      margin-bottom: 40px;
+      letter-spacing: -1px;
+    }
+
+    .input-group {
+      position: relative;
+      margin-bottom: 25px;
+    }
+
+    .input-group i {
+      position: absolute;
+      left: 20px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 24px;
+      color: #1a1a2e;
+      z-index: 1;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 18px 20px 18px 60px;
+      font-size: 20px;
+      border: 3px solid #d0c4b8;
+      border-radius: 20px;
+      background: #faf8f5;
+      color: #1a1a2e;
+      transition: all 0.3s ease;
+    }
+
+    .search-input:focus {
+      outline: none;
+      border-color: #a89684;
+      background: #ffffff;
+    }
+
+    .search-input::placeholder {
+      color: #1a1a2e;
+      font-size: 20px;
+    }
+
+    .table-container {
+      background: #faf8f5;
+      border-radius: 20px;
+      border: 3px solid #d0c4b8;
+      overflow: hidden;
+      margin-bottom: 30px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 20px;
     }
 
-    table th,
-    table td {
+    thead {
+      background: #faf8f5;
+    }
+
+    th {
+      padding: 20px;
       text-align: left;
-      padding: 10px;
-      font-size: 14px;
-      border-bottom: 1px solid #e5e7eb;
+      font-size: 22px;
+      font-weight: 700;
+      color: #1a1a2e;
+      border-bottom: 3px solid #d0c4b8;
     }
 
-    table th {
-      background: #f3f4f6;
-      color: #374151;
+    th:last-child {
+      text-align: center;
+    }
+
+    tbody tr {
+      border-bottom: 2px solid #e8e0d8;
+      transition: background 0.2s ease;
+    }
+
+    tbody tr:hover {
+      background: #f5f0eb;
+    }
+
+    tbody tr:last-child {
+      border-bottom: none;
+    }
+
+    td {
+      padding: 22px 20px;
+      font-size: 20px;
+      color: #1a1a2e;
+      font-weight: 600;
     }
 
     .action-icons {
@@ -60,9 +140,10 @@
       background: none;
       border: none;
       cursor: pointer;
-      font-size: 18px;
-      padding: 5px;
+      font-size: 20px;
+      padding: 8px;
       transition: all 0.3s ease;
+      border-radius: 8px;
     }
 
     .edit-btn {
@@ -71,7 +152,8 @@
 
     .edit-btn:hover {
       color: #1d4ed8;
-      transform: scale(1.2);
+      transform: scale(1.15);
+      background: rgba(37, 99, 235, 0.1);
     }
 
     .delete-btn {
@@ -80,24 +162,36 @@
 
     .delete-btn:hover {
       color: #991b1b;
-      transform: scale(1.2);
+      transform: scale(1.15);
+      background: rgba(220, 38, 38, 0.1);
     }
 
-    .back {
+    .back-link {
       display: inline-block;
-      margin-top: 15px;
-      padding: 8px 12px;
-      background: #2563eb;
-      color: white;
-      border-radius: 6px;
+      margin-top: 20px;
+      padding: 12px 24px;
+      background: #e8e0d8;
+      color: #1a1a2e;
       text-decoration: none;
+      border-radius: 15px;
+      font-weight: 700;
+      font-size: 18px;
+      transition: all 0.3s ease;
     }
 
-    .back:hover {
-      background: #1d4ed8;
+    .back-link:hover {
+      background: #d0c4b8;
+      transform: translateX(-3px);
     }
 
-    /* Modal for Edit */
+    .no-data {
+      text-align: center;
+      padding: 40px;
+      font-size: 18px;
+      color: #666;
+    }
+
+    /* Modal Styles */
     .modal {
       display: none;
       position: fixed;
@@ -112,134 +206,191 @@
     }
 
     .modal-content {
-      background-color: white;
-      padding: 30px;
-      border-radius: 12px;
+      background: #ffffff;
+      padding: 40px;
+      border-radius: 25px;
       width: 90%;
-      max-width: 400px;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+      max-width: 450px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      border: 3px solid #e0d5c7;
     }
 
     .modal-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 30px;
     }
 
     .modal-header h2 {
       margin: 0;
-      color: #111827;
+      color: #1a1a2e;
+      font-size: 28px;
+      font-weight: 800;
     }
 
     .close {
-      font-size: 28px;
+      font-size: 32px;
       font-weight: bold;
       color: #6b7280;
       cursor: pointer;
       border: none;
       background: none;
+      transition: all 0.2s;
     }
 
     .close:hover {
-      color: #111827;
+      color: #1a1a2e;
+      transform: rotate(90deg);
     }
 
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 5px;
-      color: #374151;
-      font-weight: 500;
+      margin-bottom: 8px;
+      color: #1a1a2e;
+      font-weight: 700;
+      font-size: 16px;
     }
 
     .form-group input {
       width: 100%;
-      padding: 10px;
-      border: 1px solid #d1d5db;
-      border-radius: 6px;
-      font-size: 14px;
+      padding: 14px 18px;
+      border: 3px solid #d0c4b8;
+      border-radius: 15px;
+      font-size: 16px;
       box-sizing: border-box;
+      background: #faf8f5;
+      color: #1a1a2e;
+      font-weight: 600;
+      transition: all 0.3s ease;
     }
 
     .form-group input:focus {
       outline: none;
-      border-color: #2563eb;
+      border-color: #a89684;
+      background: #ffffff;
     }
 
     .modal-buttons {
       display: flex;
-      gap: 10px;
+      gap: 12px;
       justify-content: flex-end;
-      margin-top: 20px;
+      margin-top: 30px;
     }
 
     .btn {
-      padding: 10px 20px;
+      padding: 12px 28px;
       border: none;
-      border-radius: 6px;
+      border-radius: 15px;
       cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
+      font-size: 16px;
+      font-weight: 700;
+      transition: all 0.3s;
     }
 
     .btn-primary {
-      background: #2563eb;
+      background: linear-gradient(135deg, #ec4899 0%, #f472b6 100%);
       color: white;
+      box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
     }
 
     .btn-primary:hover {
-      background: #1d4ed8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
     }
 
     .btn-secondary {
-      background: #e5e7eb;
-      color: #374151;
+      background: #e8e0d8;
+      color: #1a1a2e;
     }
 
     .btn-secondary:hover {
-      background: #d1d5db;
+      background: #d0c4b8;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 30px 25px;
+      }
+
+      h1 {
+        font-size: 32px;
+        margin-bottom: 30px;
+      }
+
+      .search-input {
+        font-size: 18px;
+        padding: 15px 15px 15px 55px;
+      }
+
+      th,
+      td {
+        padding: 15px 10px;
+        font-size: 16px;
+      }
+
+      .icon-btn {
+        font-size: 18px;
+        padding: 6px;
+      }
     }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>All Registered Students</h1>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Roll No</th>
-          <th>Edit/Delete</th>
-          <th style="text-align: center;">Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% students.forEach(student=> { %>
+    <h1>All Students</h1>
+
+    <div class="input-group">
+      <i class="fas fa-search"></i>
+      <input type="text" class="search-input" placeholder="Search Student" id="searchInput">
+    </div>
+
+    <div class="table-container">
+      <table>
+        <thead>
           <tr>
-            <td><%= student.name %></td>
-            <td><%= student.roll_no %></td>
-            <td><%= student.email %></td>
-            <td>
-              <div class="action-icons">
-                <button class="icon-btn edit-btn" onclick="openEditModal('<%= student._id %>', '<%= student.name %>', '<%= student.roll_no %>', '<%= student.email %>')" title="Edit Student">
-                  <i class="fas fa-pen"></i>
-                </button>
-                <button class="icon-btn delete-btn" onclick="confirmDelete('<%= student._id %>', '<%= student.name %>')" title="Delete Student">
-                  <i class="fas fa-trash"></i>
-                </button>
-              </div>
-            </td>
+            <th>Name</th>
+            <th>Roll No</th>
+            <th>Edit/Delete</th>
+            <th style="text-align: center;">Actions</th>
           </tr>
-        <% }) %>
-      </tbody>
-    </table>
-    <a href="/" class="back">⬅ Back</a>
+        </thead>
+        <tbody id="studentTable">
+          <% if (students && students.length> 0) { %>
+            <% students.forEach(student=> { %>
+              <tr>
+                <td><%= student.name %></td>
+                <td><%= student.roll_no %></td>
+                <td><%= student.email %></td>
+                <td>
+                  <div class="action-icons">
+                    <button class="icon-btn edit-btn"
+                      onclick="openEditModal('<%= student._id %>', '<%= student.name %>', '<%= student.roll_no %>', '<%= student.email %>')"
+                      title="Edit Student">
+                      <i class="fas fa-pen"></i>
+                    </button>
+                    <button class="icon-btn delete-btn"
+                      onclick="confirmDelete('<%= student._id %>', '<%= student.name %>')" title="Delete Student">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <% }) %>
+                <% } else { %>
+                  <tr>
+                    <td colspan="4" class="no-data">No students found</td>
+                  </tr>
+                  <% } %>
+        </tbody>
+      </table>
+    </div>
+    <a href="/" class="back-link">⬅ Back to Home</a>
   </div>
 
   <!-- Edit Modal -->
@@ -251,22 +402,22 @@
       </div>
       <form id="editForm" method="POST" action="/teacher/edit-student">
         <input type="hidden" id="editStudentId" name="studentId">
-        
+
         <div class="form-group">
           <label for="editName">Name</label>
           <input type="text" id="editName" name="name" required>
         </div>
-        
+
         <div class="form-group">
           <label for="editRollNo">Roll No</label>
           <input type="text" id="editRollNo" name="roll_no" maxlength="6" required>
         </div>
-        
+
         <div class="form-group">
           <label for="editEmail">Email</label>
-          <input type="email" id="editEmail" name="email" required>
+          <input type="email" id="editEmail" name="email">
         </div>
-        
+
         <div class="modal-buttons">
           <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
           <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -276,6 +427,30 @@
   </div>
 
   <script>
+    // Search functionality
+    const searchInput = document.getElementById('searchInput');
+    const table = document.getElementById('studentTable');
+
+    searchInput.addEventListener('input', function(e) {
+      const searchTerm = e.target.value.toLowerCase();
+      const rows = table.getElementsByTagName('tr');
+
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        if (cells.length > 0) {
+          const rollNo = cells[0]?.textContent.toLowerCase() || '';
+          const name = cells[1]?.textContent.toLowerCase() || '';
+          const email = cells[2]?.textContent.toLowerCase() || '';
+          
+          if (rollNo.includes(searchTerm) || name.includes(searchTerm) || email.includes(searchTerm)) {
+            rows[i].style.display = '';
+          } else {
+            rows[i].style.display = 'none';
+          }
+        }
+      }
+    });
+
     function openEditModal(id, name, rollNo, email) {
       document.getElementById('editStudentId').value = id;
       document.getElementById('editName').value = name;
@@ -289,8 +464,7 @@
     }
 
     function confirmDelete(id, name) {
-      if (confirm(`Are you sure you want to delete ${name}?`)) {
-        // Create a form and submit it
+      if (confirm(`Are you sure you want to delete ${name}?\n\nThis will also delete all their attendance records.`)) {
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '/teacher/delete-student';

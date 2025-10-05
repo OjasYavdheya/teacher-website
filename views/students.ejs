@@ -366,11 +366,10 @@
               <tr>
                 <td><%= student.name %></td>
                 <td><%= student.roll_no %></td>
-                <td><%= student.email %></td>
                 <td>
                   <div class="action-icons">
                     <button class="icon-btn edit-btn"
-                      onclick="openEditModal('<%= student._id %>', '<%= student.name %>', '<%= student.roll_no %>', '<%= student.email %>')"
+                      onclick="openEditModal('<%= student._id %>', '<%= student.name %>', '<%= student.roll_no %>')"
                       title="Edit Student">
                       <i class="fas fa-pen"></i>
                     </button>
@@ -413,11 +412,6 @@
           <input type="text" id="editRollNo" name="roll_no" maxlength="6" required>
         </div>
 
-        <div class="form-group">
-          <label for="editEmail">Email</label>
-          <input type="email" id="editEmail" name="email">
-        </div>
-
         <div class="modal-buttons">
           <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
           <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -440,9 +434,8 @@
         if (cells.length > 0) {
           const rollNo = cells[0]?.textContent.toLowerCase() || '';
           const name = cells[1]?.textContent.toLowerCase() || '';
-          const email = cells[2]?.textContent.toLowerCase() || '';
           
-          if (rollNo.includes(searchTerm) || name.includes(searchTerm) || email.includes(searchTerm)) {
+          if (rollNo.includes(searchTerm) || name.includes(searchTerm)) {
             rows[i].style.display = '';
           } else {
             rows[i].style.display = 'none';
@@ -451,11 +444,10 @@
       }
     });
 
-    function openEditModal(id, name, rollNo, email) {
+    function openEditModal(id, name, rollNo,) {
       document.getElementById('editStudentId').value = id;
       document.getElementById('editName').value = name;
-      document.getElementById('editRollNo').value = rollNo;
-      document.getElementById('editEmail').value = email || '';
+      document.getElementById('editRollNo').value = rollNo || '';
       document.getElementById('editModal').style.display = 'flex';
     }
 
